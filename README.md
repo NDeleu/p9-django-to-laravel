@@ -1,66 +1,37 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Projet en construction.
+Certaines modifications sont encore à réaliser.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Actuellement : 
 
-## About Laravel
+Problème sur la gestion login, change password form et done et register (signup) (+ problème sur redondance de nom /home natif de Laravel et home de la logique métier)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Piste de solution possible (changement à venir) :
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Gestion des routes : Vous pouvez conserver vos routes actuelles pour l'inscription (signup) et la modification de la photo de profil (upload_profile_photo), car ces fonctionnalités sont spécifiques à votre application. Cependant, vous devrez ajuster la gestion de la page de connexion.
 
-## Learning Laravel
+Supprimez la route personnalisée que vous avez créée pour la page de connexion (showLoginForm) dans votre fichier web.php.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Ajoutez les routes d'authentification natives de Laravel en utilisant la méthode Auth::routes(). Cela générera automatiquement les routes pour la connexion, l'inscription, la réinitialisation du mot de passe, etc.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Assurez-vous que la route vers la page d'accueil est correctement configurée, comme vous l'avez déjà fait, pour rediriger vers home en cas de succès.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
-## Laravel Sponsors
+// Routes pour l'authentification
+Auth::routes();
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+// Route vers la page d'accueil
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-### Premium Partners
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Personnalisation des vues d'authentification : Vous pouvez continuer à personnaliser vos vues d'authentification dans le répertoire resources/views. Assurez-vous que ces vues correspondent à vos besoins, en particulier login.blade.php, password_change_done.blade.php, password_change_form.blade.php, signup.blade.php, et upload_profile_photo.blade.php.
 
-## Contributing
+Redirection vers la page de connexion : Vous avez mentionné que si un utilisateur non authentifié accède à home, il est automatiquement redirigé vers la page de connexion. Vous pouvez laisser cette logique en place, car elle est utile pour sécuriser les pages nécessitant une authentification.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Autres considérations : Assurez-vous que votre gestion de la connexion et de l'inscription personnalisée dans le contrôleur AuthenticationController reste inchangée, car elle semble déjà correspondre à vos besoins.
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+En suivant ces étapes, vous pouvez tirer parti de l'authentification native de Laravel pour la connexion et l'inscription tout en conservant vos propres vues personnalisées pour ces fonctionnalités. Les utilisateurs seront redirigés vers les pages d'authentification natives de Laravel lorsqu'ils accéderont aux routes associées, mais vous pouvez personnaliser ces pages selon vos besoins. Cela simplifiera la gestion de l'authentification dans votre application.

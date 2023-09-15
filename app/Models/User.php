@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo',
     ];
 
     /**
@@ -40,6 +41,27 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
+
+    /**
+     * Define a relationship for the users this user is following.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function follows()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'followed_user_id')
+                    ->withPivot('user_name', 'followed_user_name');
+    }
+
+    /**
+     * Define a relationship for the users following this user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'followed_user_id', 'user_id')
+                    ->withPivot('user_name', 'followed_user_name');
+    }
 }
